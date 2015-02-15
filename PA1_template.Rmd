@@ -1,25 +1,32 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
+title: "PA1_template.Rmd"
+author: "Geetika Jain"
+date: "Monday, February 16, 2015"
+output: html_document
 ---
 
+This is an R Markdown document for Peer Assessment 1 of "Reproducible Research" course from coursera
 
-## Loading and preprocessing the data
+```{r, echo=TRUE}
+data = read.csv("activity.csv", header = T)
+completeData  = data[complete.cases(data), ]
+library(plyr)
+library(ggplot2)
+## Create new DF with no. of steps for each day
+plotData = ddply(data, .(date), summarise, stepsInDay = sum(steps, na.rm = T))
+
+qplot(data = plotData, x = date, y = stepsInDay, geom = "histogram", stat = "identity")
+```
+
+Summary of the  data
+```{r, echo=TRUE}
+summary(plotData)
+```
 
 
+Computing the mean and the meadian of the data
+```{r, echo=TRUE}
+mean(plotData$stepsInDay)
+median(plotData$stepsInDay)
+```
 
-## What is mean total number of steps taken per day?
-
-
-
-## What is the average daily activity pattern?
-
-
-
-## Imputing missing values
-
-
-
-## Are there differences in activity patterns between weekdays and weekends?
