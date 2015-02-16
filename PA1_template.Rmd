@@ -8,13 +8,19 @@ output: html_document
 This is an R Markdown document for Peer Assessment 1 of "Reproducible Research" course from coursera
 
 ```{r, echo=TRUE}
-data = read.csv("activity.csv", header = T)
-completeData  = data[complete.cases(data), ]
+
+## Read the data
+rawData = read.csv("activity.csv", header = T)
+data  = rawData[complete.cases(rawData), ]
+
+## Load the requisite libraries
 library(plyr)
 library(ggplot2)
+
 ## Create new DF with no. of steps for each day
 plotData = ddply(data, .(date), summarise, stepsInDay = sum(steps, na.rm = T))
 
+## Plot the data
 qplot(data = plotData, x = date, y = stepsInDay, geom = "histogram", stat = "identity")
 ```
 
@@ -29,4 +35,36 @@ Computing the mean and the meadian of the data
 mean(plotData$stepsInDay)
 median(plotData$stepsInDay)
 ```
+
+Computing average number of steps in an interval
+```{r, echo = TRUE}
+
+## Create DF with number of steps in an interval averaged over all days
+intervalMean = ddply(data, .(interval), summarise, meanStepsInInterval = mean(steps))
+
+## Plot a line graph for the trend
+qplot(data = intervalMean, x = interval, y = meanStepsInInterval, geom = "line", stat = "identity")
+```
+
+
+The interval with max mean steps averaged across days
+```{r, echo = TRUE}
+intervalMean[which.max(intervalMean$meanStepsInInterval),]
+```
+
+Number of missing cases
+```{r, echo= TRUE}
+sum(is.na(rawData))
+```
+
+Impute missing values : Use the mean steps for that interval averaged across all days
+```{r, echo=TRUE}
+workingData = rawData
+str(workingData)
+
+workingData$imputedSteps = apply(workingData[,c('steps', 'interval')], 1, function(x) {if(is.na(x[1]))  intervalMean[which(intervalMean$interval == x[2]), 2]  else x[1]})
+
+str(workingData)
+```
+
 
