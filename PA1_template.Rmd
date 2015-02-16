@@ -59,12 +59,30 @@ sum(is.na(rawData))
 
 Impute missing values : Use the mean steps for that interval averaged across all days
 ```{r, echo=TRUE}
+## make a copy of the rawData
 workingData = rawData
 str(workingData)
 
+## use mean steps for that interval averaged across all days where data is not available
 workingData$imputedSteps = apply(workingData[,c('steps', 'interval')], 1, function(x) {if(is.na(x[1]))  intervalMean[which(intervalMean$interval == x[2]), 2]  else x[1]})
 
 str(workingData)
+
+qplot(data = workingData, x = date, y = imputedSteps, geom = "histogram", stat = "identity")
+
+plotData = ddply(workingData, .(date), summarise, stepsInDay = sum(imputedSteps, na.rm = T))
+
+mean(plotData$stepsInDay)
+median(plotData$stepsInDay)
+```
+
+Observe difference in activity pattern in weekdays vs weekends
+```{r, echo=TRUE}
+data$weekday = apply(data[,2:3], 1, function(x) {if(((weekdays(as.Date(x[1]))) == "Saturday") || (weekdays(as.Date(x[1])) == "Sunday"))  "Weekend"  else  "Weekday"})
+
+intervalMean = ddply(data, .(interval,weekday), summarise, meanStepsInInterval = mean(steps, na.rm = T))
+
+qplot(data = intervalMean, x = interval, y = meanStepsInInterval, facets = weekday ~ . , geom = "line", stat = "identity", xlab = "Interval", ylab = "Number of steps")
 ```
 
 
