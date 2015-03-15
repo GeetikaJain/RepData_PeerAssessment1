@@ -1,14 +1,14 @@
+
 ---
 title: "PA1_template.Rmd"
 author: "Geetika Jain"
-date: "Monday, February 16, 2015"
+date: "Monday, March 16, 2015"
 output: html_document
 ---
 
 This is an R Markdown document for Peer Assessment 1 of "Reproducible Research" course from coursera
 
 ```{r, echo=TRUE}
-
 ## Read the data
 rawData = read.csv("activity.csv", header = T)
 data  = rawData[complete.cases(rawData), ]
@@ -21,9 +21,10 @@ library(ggplot2)
 plotData = ddply(data, .(date), summarise, stepsInDay = sum(steps, na.rm = T))
 
 ## Plot the data
-qplot(data = plotData, x = date, y = stepsInDay, geom = "histogram", stat = "identity")
+##qplot(data = plotData, x = stepsInDay, geom = "histogram", stat = "identity")
+hist(plotData$stepsInDay, xlab = "stepsInDay", 
+     main = "Histogram of Steps In a Day")
 ```
-
 Summary of the  data
 ```{r, echo=TRUE}
 summary(plotData)

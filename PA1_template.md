@@ -1,7 +1,8 @@
+
 ---
 title: "PA1_template.Rmd"
 author: "Geetika Jain"
-date: "Monday, February 16, 2015"
+date: "Monday, March 16, 2015"
 output: html_document
 ---
 
@@ -15,17 +16,30 @@ data  = rawData[complete.cases(rawData), ]
 
 ## Load the requisite libraries
 library(plyr)
+```
+
+```
+## 
+## Attaching package: 'plyr'
+## 
+## The following object is masked from 'package:lubridate':
+## 
+##     here
+```
+
+```r
 library(ggplot2)
 
 ## Create new DF with no. of steps for each day
 plotData = ddply(data, .(date), summarise, stepsInDay = sum(steps, na.rm = T))
 
 ## Plot the data
-qplot(data = plotData, x = date, y = stepsInDay, geom = "histogram", stat = "identity")
+##qplot(data = plotData, x = stepsInDay, geom = "histogram", stat = "identity")
+hist(plotData$stepsInDay, xlab = "stepsInDay", 
+     main = "Histogram of Steps In a Day")
 ```
 
 ![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1-1.png) 
-
 Summary of the  data
 
 ```r
