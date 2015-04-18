@@ -2,7 +2,7 @@
 ---
 title: "PA1_template.Rmd"
 author: "Geetika Jain"
-date: "Monday, March 16, 2015"
+date: "Saturday, April 18, 2015"
 output: html_document
 ---
 
@@ -16,18 +16,6 @@ data  = rawData[complete.cases(rawData), ]
 
 ## Load the requisite libraries
 library(plyr)
-```
-
-```
-## 
-## Attaching package: 'plyr'
-## 
-## The following object is masked from 'package:lubridate':
-## 
-##     here
-```
-
-```r
 library(ggplot2)
 
 ## Create new DF with no. of steps for each day
@@ -40,7 +28,9 @@ hist(plotData$stepsInDay, xlab = "stepsInDay",
 ```
 
 ![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1-1.png) 
+
 Summary of the  data
+
 
 ```r
 summary(plotData)
@@ -91,6 +81,7 @@ qplot(data = intervalMean, x = interval, y = meanStepsInInterval, geom = "line",
 
 The interval with max mean steps averaged across days
 
+
 ```r
 intervalMean[which.max(intervalMean$meanStepsInInterval),]
 ```
@@ -102,6 +93,7 @@ intervalMean[which.max(intervalMean$meanStepsInInterval),]
 
 Number of missing cases
 
+
 ```r
 sum(is.na(rawData))
 ```
@@ -111,6 +103,7 @@ sum(is.na(rawData))
 ```
 
 Impute missing values : Use the mean steps for that interval averaged across all days
+
 
 ```r
 ## make a copy of the rawData
@@ -127,6 +120,7 @@ str(workingData)
 
 ```r
 ## use mean steps for that interval averaged across all days where data is not available
+
 workingData$imputedSteps = apply(workingData[,c('steps', 'interval')], 1, function(x) {if(is.na(x[1]))  intervalMean[which(intervalMean$interval == x[2]), 2]  else x[1]})
 
 str(workingData)

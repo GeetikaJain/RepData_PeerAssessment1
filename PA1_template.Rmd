@@ -2,7 +2,7 @@
 ---
 title: "PA1_template.Rmd"
 author: "Geetika Jain"
-date: "Monday, March 16, 2015"
+date: "Saturday, April 18, 2015"
 output: html_document
 ---
 
@@ -25,7 +25,9 @@ plotData = ddply(data, .(date), summarise, stepsInDay = sum(steps, na.rm = T))
 hist(plotData$stepsInDay, xlab = "stepsInDay", 
      main = "Histogram of Steps In a Day")
 ```
+
 Summary of the  data
+
 ```{r, echo=TRUE}
 summary(plotData)
 ```
@@ -49,22 +51,26 @@ qplot(data = intervalMean, x = interval, y = meanStepsInInterval, geom = "line",
 
 
 The interval with max mean steps averaged across days
+
 ```{r, echo = TRUE}
 intervalMean[which.max(intervalMean$meanStepsInInterval),]
 ```
 
 Number of missing cases
+
 ```{r, echo= TRUE}
 sum(is.na(rawData))
 ```
 
 Impute missing values : Use the mean steps for that interval averaged across all days
+
 ```{r, echo=TRUE}
 ## make a copy of the rawData
 workingData = rawData
 str(workingData)
 
 ## use mean steps for that interval averaged across all days where data is not available
+
 workingData$imputedSteps = apply(workingData[,c('steps', 'interval')], 1, function(x) {if(is.na(x[1]))  intervalMean[which(intervalMean$interval == x[2]), 2]  else x[1]})
 
 str(workingData)
